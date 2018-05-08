@@ -13,6 +13,9 @@ pipeline {
       }
     }
     stage('Test') {
+        when {
+            branch 'develop'
+        }
         steps {
             sh 'mvn test'
         }
