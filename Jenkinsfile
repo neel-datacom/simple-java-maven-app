@@ -9,7 +9,8 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'mvn -B -DskipTests clean package'
+        sh '''docker pull maven:3-alpine
+mvn -B -DskipTests clean package'''
       }
     }
     stage('Test') {
