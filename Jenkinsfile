@@ -15,7 +15,7 @@ pipeline {
                 parallel (
                     "Maven" : {
                         sh 'mvn test'
-                    }
+                    },
                     "Firefox" : {
                         sh 'echo testing Firefox'
                         sh 'echo more steps'
