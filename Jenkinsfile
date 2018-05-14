@@ -1,26 +1,46 @@
-pipeline {
-  agent {
-    docker {
-      image 'maven:3-alpine'
-      args '-v /root/.m2:/root/.m2'
-    }
+# pipeline {
+#   agent {
+#     docker {
+#       image 'maven:3-alpine'
+#       args '-v /root/.m2:/root/.m2'
+#     }
 
-  }
-  stages {
-    stage('Build') {
-      steps {
-        sh 'mvn -B -DskipTests clean package'
-      }
-    }
-    stage('Test') {
-        steps {
-            sh 'mvn test'
+#   }
+#   stages {
+#     stage('Build') {
+#       steps {
+#         sh 'mvn -B -DskipTests clean package'
+#       }
+#     }
+#     stage('Test') {
+#         steps {
+#             sh 'mvn test'
+#         }
+#         post {
+#            always {
+#                 junit 'target/surefire-reports/*.xml'
+#            }
+#         }
+#     }
+#   }
+# }
+
+pipeline {
+    agent { label '' }
+    stages {
+        stage("test") {
+            steps {
+                parallel (
+                    "Firefox" : {
+                        sh "echo testing Firefox"
+                        sh "echo more steps"
+                    },
+                    "Chrome" : {
+                        sh "echo testing Chrome"
+                        sh "echo more steps"
+                    }
+                }
+            )
         }
-        post {
-           always {
-                junit 'target/surefire-reports/*.xml'
-           }
-        }
-    }
-  }
+    }    
 }
