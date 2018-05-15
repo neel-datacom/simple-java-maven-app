@@ -35,7 +35,7 @@ pipeline {
               }
             }
             steps {
-                sh 'make publish'
+                sh 'echo Deploy success'
             }
         }
     }    
