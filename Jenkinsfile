@@ -1,43 +1,58 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine'
-            args '-v /root/.m2:/root/.m2'
-        }
+  agent {
+    docker {
+      image 'maven:3-alpine'
+      args '-v /root/.m2:/root/.m2'
     }
-    stages {
-        stage("Build") {
-            steps {
-                sh 'mvn -B -DskipTests clean package'
-            }
+
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'mvn -B -DskipTests clean package'
+      }
+    }
+    stage('Test') {
+      parallel {
+        stage('Maven') {
+          steps {
+            sh 'mvn test'
+          }
         }
-        stage("Test") {
-            steps {
-                parallel (
-                    "Maven" : {
-                        sh 'mvn test'
-                    },
-                    "Firefox" : {
-                        sh 'echo testing Firefox'
-                        sh 'echo more steps'
-                    },
-                    "Chrome" : {
-                        sh 'echo testing Chrome'
-                        sh 'echo more steps'
-                    }
-                )
-            }
+        stage('Firefox') {
+          steps {
+            sh 'echo testing Firefox'
+            sh 'echo more steps'
+          }
         }
-        stage("Deploy") {
-            when {
-              expression {
-                currentBuild.result == null || currentBuild.result == 'SUCCESS' 
-              }
-            }
-            steps {
-                sh 'echo Deploy success'
-                sh 'echo test'
-            }
+        stage('Chrome') {
+          steps {
+            sh 'echo testing Chrome'
+            sh 'echo more steps'
+          }
         }
-    }    
+      }
+    }
+    stage('Deploy') {
+      parallel {
+        stage('Deploy') {
+          when {
+            expression {
+              currentBuild.result == null || currentBuild.result == 'SUCCESS'
+            }
+
+          }
+          steps {
+            sh 'echo Deploy success'
+            sh 'echo test'
+          }
+        }
+        stage('test d') {
+          steps {
+            sh 'echo "d2"'
+          }
+        }
+      }
+    }
+  }
 }
