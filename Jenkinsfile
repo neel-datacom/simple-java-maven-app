@@ -36,6 +36,7 @@ pipeline {
             }
             steps {
                 sh 'echo Deploy success'
+                sh 'echo test'
             }
         }
     }    
